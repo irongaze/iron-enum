@@ -1,0 +1,7 @@
+== 1.0.0 / 2013-03-23
+
+* Initial revision
+* Support declaring enums using #enum
+* Support enum attributes using #enum_attr
+* ActiveRecord support for automatic scope creation and pretty inspects
+* Add to GitHub

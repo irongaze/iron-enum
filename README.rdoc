@@ -1,0 +1,93 @@
+= GEM: iron-enum
+
+Written by Rob Morris @ Irongaze Consulting LLC (http://irongaze.com)
+
+== DESCRIPTION
+
+Add support for rich enum values (enumerated constants) to Ruby/Rails.
+
+== SYNOPSIS
+
+Managing constants - status flags, system states, etc - is frustrating when working
+with Ruby and Rails.  The canonical solution is to use class constants.  But doing so
+leaves a lot to be desired.  This gem provides a much more Ruby-like way of dealing
+with magic constants, that provides symbol/key-based lookup, automatic conversion between
+keys and values, user-friendly naming, Rails integration, attribute support, and more.
+
+To use:
+
+    # Require the gem's classes (not needed if using Bundler)
+    require 'iron/enum'  
+
+    # Declare an enum module.  In this case, let's say we're working on a
+    # shopping cart system that tracks orders.  Orders have a status - perfect
+    # place for an enumeration!
+    module OrderStatus
+      enum :created,   1
+      enum :cancelled, 2, 'No Sale'
+      enum :purchased, 3
+      enum :shipped,   4
+      enum :returned,  5
+    end
+
+    # Once you have your enum set up, there are a host of things you can do
+    # To start with, enums set up normal Ruby class constants
+    >> puts OrderStatus::PURCHASED
+    => 3
+    
+    # But you can also refer to them with symbolic keys
+    >> puts OrderStatus.value(:purchased)
+    => 3
+    
+    # You can convert between values, keys and text
+    >> OrderStatus.value(:shipped)
+    => 4
+    >> OrderStatus.name(:shipped)
+    => 'Shipped'
+    >> OrderStatus.key(4)
+    => :shipped
+    
+    # Validate values against the set of good values
+    >> OrderStatus.valid?(10)
+    => false
+    
+    # Get an array of all valid values
+    >> OrderStatus.values
+    => [1, 2, 3, 4, 5]
+    # Get a selection of values by key
+    >> OrderStatus.values(:created, :cancelled, :returned)
+    => [1, 2, 5]
+    
+    # This is all handy, but where enums really shine is as declared attributes
+    class Order < ActiveRecord::Base
+      enum_attr :status => OrderStatus
+    end
+    
+    # Now you can set a value using a key
+    >> @order = Order.new
+    >> @order.status = :shipped
+    => 4
+    # Test for a given value with a clear syntax
+    >> @order.status_returned?
+    => false
+    # Set a value
+    >> @order.status_returned!
+    => 5
+    
+    # You even get free scoping
+    >> Order.with_status(:shipped)
+    => [...all orders with status == 4...]
+    
+== REQUIREMENTS
+
+None, though you'll need rspec, sqlite3 and active_record gems to test and build the gem
+
+== INSTALL
+
+To install, simply run:
+
+    sudo gem install iron-enum
+    
+RVM users can skip the sudo:
+  
+    gem install iron-enum
