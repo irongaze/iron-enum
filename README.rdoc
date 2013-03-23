@@ -12,7 +12,7 @@ Managing constants - status flags, system states, etc - is frustrating when work
 with Ruby and Rails.  The canonical solution is to use class constants.  But doing so
 leaves a lot to be desired.  This gem provides a much more Ruby-like way of dealing
 with magic constants, that provides symbol/key-based lookup, automatic conversion between
-keys and values, user-friendly naming, Rails integration, attribute support, and more.
+keys and values, user-friendly naming, attribute support, model scoping and validation, and more.
 
 To use:
 
@@ -48,7 +48,7 @@ To use:
     => :shipped
     
     # Validate values against the set of good values
-    >> OrderStatus.valid?(10)
+    >> OrderStatus.valid_value?(10)
     => false
     
     # Get an array of all valid values
@@ -73,10 +73,20 @@ To use:
     # Set a value
     >> @order.status_returned!
     => 5
+
+    # Setting an invalid value raises an exception
+    # This raises RuntimeError('Unknown key or value [27] in enum OrderStatus')
+    >> @order.status = 27
     
     # You even get free scoping
     >> Order.with_status(:shipped)
     => [...all orders with status == 4...]
+    
+    # And model validation, should you somehow set the field to an improper value
+    >> @order = Order.new
+    >> @order.send(:write_attribute, :status, -2)
+    >> @order.valid?
+    => false
     
 == REQUIREMENTS
 

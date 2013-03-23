@@ -28,5 +28,9 @@ describe Enum do
       @obj.pos_as_name.should == 'First'
     end
     
+    it 'should raise on setting invalid values' do
+      expect { @obj.pos = 4000 }.to raise_error
+    end
+    
   end
 end

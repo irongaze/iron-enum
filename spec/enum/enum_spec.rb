@@ -25,5 +25,15 @@ describe Enum do
     EnumTest.valid_value?(10).should be_true
     EnumTest.valid_value?(555).should be_false
   end
+  
+  it 'should enforce proper keys' do
+    expect { EnumTest.enum('not-a-key', 27) }.to raise_error
+    expect { EnumTest.enum(27, 100) }.to raise_error
+  end
+  
+  it 'should enforce proper values' do
+    expect { EnumTest.enum(:some_key, nil) }.to raise_error
+    expect { EnumTest.enum(:some_key, '200') }.to raise_error
+  end
 
 end

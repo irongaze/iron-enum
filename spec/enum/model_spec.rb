@@ -53,6 +53,7 @@ describe Enum do
     
     it 'should support multiple values in the automatic scope' do
       ARTest.delete_all
+      ARTest.create!(:enum_field => :one)
       ARTest.create!(:enum_field => :two)
       ARTest.create!(:enum_field => 33)
       ARTest.with_enum_field(2, :thirty_three).count.should == 2
@@ -73,6 +74,21 @@ describe Enum do
       ARTest.create!(:enum_field => 2)
       ARTest.create!(:enum_field => 2)
       ARTest.with_enum_field(nil).count.should == 1
+    end
+    
+    it 'should fail validation with invalid values' do
+      @test.send(:write_attribute, :enum_field, 270)
+      @test.should_not be_valid
+    end
+    
+    it 'should pass validation with valid values' do
+      @test.send(:write_attribute, :enum_field, AREnum::TWO)
+      @test.should be_valid
+    end
+    
+    it 'should pass validation with a nil value' do
+      @test.send(:write_attribute, :enum_field, nil)
+      @test.should be_valid
     end
     
   end

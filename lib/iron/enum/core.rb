@@ -82,7 +82,7 @@ module Enum
     def row_for(in_key)
       key = to_key(in_key)
       row = enum_list.find {|r| r[KEY_IDX] == key}
-      raise "No information on key [#{in_key.inspect}] in enum #{self}" unless row
+      raise RuntimeError.new("Unknown key or value [#{in_key.inspect}] in enum #{self}") unless row
       row
     end
 

@@ -45,13 +45,13 @@ module Enum
   module AttrSupport
 
     # Call with enum_attr :field => Enum
-    def enum_attr(name_to_enum_map)
+    def enum_attr(field_to_enum_map)
       # Save off the attr map
       @enum_attrs ||= {}
-      @enum_attrs.merge!(name_to_enum_map)
+      @enum_attrs.merge!(field_to_enum_map)
 
       # Run each newly added enum attribute
-      name_to_enum_map.each_pair do |attr_name, enum|
+      field_to_enum_map.each_pair do |attr_field, enum|
         # Convert Enum to "Enum"
         enum_klass = enum.to_s
 
@@ -59,12 +59,12 @@ module Enum
         #   attr_as_key to get back eg :production or :online instead of 1 or 5
         #   attr_as_name to get back eg "Production" or "Online"
         class_eval <<-eos, __FILE__, __LINE__ + 1
-          def #{attr_name}_as_key
-            #{enum_klass}.key(self.#{attr_name})
+          def #{attr_field}_as_key
+            #{enum_klass}.key(self.#{attr_field})
           end
 
-          def #{attr_name}_as_name
-            #{enum_klass}.name(self.#{attr_name})
+          def #{attr_field}_as_name
+            #{enum_klass}.name(self.#{attr_field})
           end
         eos
 
@@ -75,12 +75,12 @@ module Enum
 
           # Build sugar for testing and setting the attribute's enumerated value
           class_eval <<-eos, __FILE__, __LINE__ + 1
-            def #{attr_name}_#{key}?
-              self.#{attr_name} == #{val}
+            def #{attr_field}_#{key}?
+              self.#{attr_field} == #{val}
             end
 
-            def #{attr_name}_#{key}!
-              self.#{attr_name} = #{val}
+            def #{attr_field}_#{key}!
+              self.#{attr_field} = #{val}
             end
           eos
         end
@@ -88,21 +88,28 @@ module Enum
         if defined?(ActiveRecord) && self < ActiveRecord::Base
 
           # Define a finder scope
-          scope "with_#{attr_name}", lambda {|*vals|
+          scope "with_#{attr_field}", lambda {|*vals|
             vals.flatten!
             if vals.empty?
               where("?", false)
             elsif vals.count == 1
-              where(attr_name => enum.value(vals.first))
+              where(attr_field => enum.value(vals.first))
             else
-              where(attr_name => enum.values(vals))
+              where(attr_field => enum.values(vals))
             end
+          }
+          
+          # Define a validation
+          validates attr_field, :inclusion => { 
+            :in => enum.values,
+            :message => "%{value} is not a valid #{enum_klass} value",
+            :allow_nil => true
           }
 
           # Override default setter to allow setting an enum attribute via key
           class_eval <<-eos, __FILE__, __LINE__ + 1
-            def #{attr_name}=(val)
-              write_attribute(:#{attr_name}, #{enum_klass}.value(val))
+            def #{attr_field}=(val)
+              write_attribute(:#{attr_field}, #{enum_klass}.value(val))
             end
           eos
 
@@ -110,12 +117,12 @@ module Enum
 
           # Create getter/setter to allow setting an enum attribute via key
           class_eval <<-eos, __FILE__, __LINE__ + 1
-            def #{attr_name}
-              @#{attr_name}
+            def #{attr_field}
+              @#{attr_field}
             end
 
-            def #{attr_name}=(val)
-              @#{attr_name} = #{enum_klass}.value(val)
+            def #{attr_field}=(val)
+              @#{attr_field} = #{enum_klass}.value(val)
             end
           eos
 
