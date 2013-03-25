@@ -16,5 +16,13 @@ describe Enum do
       OptionTest.options(:gamma, :beta).should == [['Monkeys', 20], ['Beta', 10]]
     end
     
+    it 'should return no options for nil' do
+      OptionTest.options(nil).should == []
+    end
+    
+    it 'should return no options for empty set' do
+      OptionTest.options([]).should == []
+    end
+    
   end
 end

@@ -27,6 +27,6 @@ describe Enum do
     it 'should return select values' do
       ValueTest.values(:alpha, :gamma).should == [5, 2]
     end
-  
+    
   end
 end

@@ -32,5 +32,10 @@ describe Enum do
       expect { @obj.pos = 4000 }.to raise_error
     end
     
+    it 'should convert strings that are ints to ints on setting values' do
+      @obj.pos = '1'
+      @obj.pos.should == 1
+    end
+  
   end
 end

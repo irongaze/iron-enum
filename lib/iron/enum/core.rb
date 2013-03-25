@@ -49,14 +49,7 @@ module Enum
     # Used for select tag options, optionally pass set of keys/ids to include, eg if there are only
     # a subset that would be valid for selection in a given context.
     def options(*included)
-      included.flatten!
-      if included.empty?
-        # All options
-        enum_list.collect {|row| option_for(row.first)}
-      else
-        # Only the specified ones
-        included.collect {|key| option_for(key)}.compact
-      end
+      rows_for(*included).collect {|row| option_for(row[KEY_IDX])}
     end
 
     # Array in order required by select fields
@@ -75,6 +68,7 @@ module Enum
 
     def to_key(id)
       return id if id.is_a?(Symbol)
+      id = id.to_i if id.is_a?(String) && id.to_i.to_s == id
       row = enum_list.find {|row| row[VALUE_IDX] == id}
       row.nil? ? nil : row[KEY_IDX]
     end
@@ -87,6 +81,7 @@ module Enum
     end
 
     def rows_for(*included)
+      return [] if included.count == 1 && (included.first == [] || included.first == nil)
       included.flatten!
       if included.empty?
         # All enums

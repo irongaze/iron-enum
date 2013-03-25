@@ -2,25 +2,24 @@
 #
 # Sample usage:
 #
-# Enum.enable_support(:all)
-# module Fruit
-#   enum :apple, 1
-#   enum :pear,  2
-# end
+#   module Fruit
+#     enum :apple, 1
+#     enum :pear,  2
+#   end
 #
 # Yields:
 #
-# Fruit::APPLE => 1
-# Fruit.name(1) => 'Apple'
-# Fruit.keys => [:apple, :pear]
-# etc...
+#   Fruit::APPLE => 1
+#   Fruit.name(1) => 'Apple'
+#   Fruit.keys => [:apple, :pear]
 #
+# etc...
 module Enum
 
-  # Indexes into our definition list
-  KEY_IDX = 0
+  # Indexes into our internal enum list
+  KEY_IDX =   0
   VALUE_IDX = 1
-  NAME_IDX = 2
+  NAME_IDX =  2
 
   # Legacy method of enum creation.  Call with a set of arrays, one for each desired enum.  Arrays should
   # contain the parameters supported by #enum, e.g. [:key, <value>, "<optional name>"]
@@ -31,7 +30,7 @@ module Enum
   end
 
   # Add an enumerated constant to the given module/class.  The key should be a symbol, the value a fixed integer
-  # that the symbol represents.  The name is an optional user-friendly name for the enum, which will efault to
+  # that the symbol represents.  The name is an optional user-friendly name for the enum, which will default to
   # a capitalized version of the key.
   #
   # Sample usage:

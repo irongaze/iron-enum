@@ -1,3 +1,8 @@
+== 1.0.2 / 2013-03-25
+
+* Improve edge cases for Enum::Core#options to correctly return [] for nil and [] explicit parameters
+* Add type coercion to enum_attr setter to allow setting via string iff that string represents a valid value in string form
+
 == 1.0.1 / 2013-03-23
 
 * Add validation of inclusion for ActiveRecord enum_attr owners
