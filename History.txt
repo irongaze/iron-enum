@@ -1,3 +1,7 @@
+== 1.0.3 / 2013-06-21
+
+* Minor bugfix to allow better handling of setting an enum attr with a blank string as if it were setting to nil
+
 == 1.0.2 / 2013-03-25
 
 * Improve edge cases for Enum::Core#options to correctly return [] for nil and [] explicit parameters

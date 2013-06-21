@@ -122,6 +122,7 @@ module Enum
             end
 
             def #{attr_field}=(val)
+              val = nil if val.is_a?(String) && val.empty?
               @#{attr_field} = #{enum_klass}.value(val)
             end
           eos

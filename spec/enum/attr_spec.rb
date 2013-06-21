@@ -36,6 +36,16 @@ describe Enum do
       @obj.pos = '1'
       @obj.pos.should == 1
     end
+    
+    it 'should set empty strings as nil' do
+      @obj.pos = ''
+      @obj.pos.should be_nil
+    end
+    
+    it 'should raise on setting to invalid strings' do
+      expect {@obj.pos = 'abc'}.to raise_error
+      expect {@obj.pos = '1a'}.to raise_error
+    end
   
   end
 end

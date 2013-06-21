@@ -67,8 +67,18 @@ module Enum
     private
 
     def to_key(id)
+      return nil if id.nil?
       return id if id.is_a?(Symbol)
-      id = id.to_i if id.is_a?(String) && id.to_i.to_s == id
+      if id.is_a?(String)
+        # Check for "15" style ids - common in web usage a la Rails where params come in as text
+        if id.to_i.to_s == id
+          # Yup, convert
+          id = id.to_i
+        else
+          # No, so invalid
+          return nil
+        end
+      end
       row = enum_list.find {|row| row[VALUE_IDX] == id}
       row.nil? ? nil : row[KEY_IDX]
     end
