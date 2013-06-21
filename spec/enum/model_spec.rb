@@ -91,5 +91,13 @@ describe Enum do
       @test.should be_valid
     end
     
+    it 'should support string values' do
+      @test.enum_field = '2'
+      @test.enum_field.should == 2
+      @test.enum_field = ''
+      @test.enum_field.should be_nil
+      expect { @test.enum_field = '1notreally' }.to raise_error
+    end
+    
   end
 end

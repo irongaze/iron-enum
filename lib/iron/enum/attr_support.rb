@@ -41,7 +41,8 @@ module Enum
   #
   #   User.with_user_type(UserType::MEMBER) => scope returning a relation selecting User instances where user_type's value == UserType::MEMBER
   #
-  # In addition, enum attributes will show up in #inspect output as e.g. UserType::GUEST instead of 0.
+  # In addition, enum attributes will show up in #inspect output as e.g. UserType::GUEST instead of 0.  Enum attributes will also generate an
+  # automatic inclusion validation to ensure that the attribute never ends up being an invalid value.
   module AttrSupport
 
     # Call with enum_attr :field => Enum
@@ -109,6 +110,7 @@ module Enum
           # Override default setter to allow setting an enum attribute via key
           class_eval <<-eos, __FILE__, __LINE__ + 1
             def #{attr_field}=(val)
+              val = nil if val.is_a?(String) && val.empty?
               write_attribute(:#{attr_field}, #{enum_klass}.value(val))
             end
           eos
