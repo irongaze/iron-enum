@@ -11,7 +11,7 @@ Add support for rich enum values (enumerated constants) to Ruby/Rails.
 Managing constants - status flags, system states, etc - is frustrating when working
 with Ruby and Rails.  The canonical solution is to use class constants.  But doing so
 leaves a lot to be desired.  This gem provides a much more Ruby-like way of dealing
-with magic constants, that provides symbol/key-based lookup, automatic conversion between
+with magic constants that provides symbol/key-based lookup, automatic conversion between
 keys and values, user-friendly naming, attribute support, model scoping and validation, and more.
 
 To use:
@@ -30,16 +30,16 @@ To use:
       enum :returned,  5
     end
 
-    # Once you have your enum set up, there are a host of things you can do
-    # To start with, enums set up normal Ruby class constants
+    # Once you have your enum set up, there are a host of things you can do.
+    # To start with, enums set up normal Ruby class constants:
     >> puts OrderStatus::PURCHASED
     => 3
     
-    # But you can also refer to them with symbolic keys
+    # But you can also refer to them with symbolic keys:
     >> puts OrderStatus.value(:purchased)
     => 3
     
-    # You can convert between values, keys and text
+    # You can convert between values, keys and text:
     >> OrderStatus.value(:shipped)
     => 4
     >> OrderStatus.name(:shipped)
@@ -78,7 +78,7 @@ To use:
     # This raises RuntimeError('Unknown key or value [27] in enum OrderStatus')
     >> @order.status = 27
     
-    # You even get free scoping
+    # You even get free scoping!
     >> Order.with_status(:shipped)
     => [...all orders with status == 4...]
     
@@ -101,3 +101,7 @@ To install, simply run:
 RVM users can skip the sudo:
   
     gem install iron-enum
+    
+Once installed, just require it:
+
+    require 'iron/enum'
