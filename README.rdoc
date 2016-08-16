@@ -60,7 +60,11 @@ To use:
     
     # This is all handy, but where enums really shine is as declared attributes
     class Order < ActiveRecord::Base
+      # Pass the attribute and the enum module that it uses
       enum_attr :status => OrderStatus
+      
+      # Note that if your attribute's name maps to your enum module name, you can skip the hash:
+      # enum_attr :order_status
     end
     
     # Now you can set a value using a key
@@ -104,4 +108,4 @@ RVM users can skip the sudo:
     
 Once installed, just require it:
 
-    require 'iron/enum'
+    require 'iron-enum'

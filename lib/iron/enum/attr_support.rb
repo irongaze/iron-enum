@@ -13,13 +13,19 @@ module Enum
   # declare it like so:
   #
   #   class User < ActiveRecord::Base
-  #     enum_attr :user_type => UserType
+  #     # A symbol will be assumed to map to a valid enum class name
+  #     enum_attr :user_type
+  #     # If your attribute's name won't map automatically, you can pass a hash instead
+  #     enum_attr :another_user_type => UserType
+  #     # If you have multiple enum attributes, you can add them all in one call, just make
+  #     # sure mapped attrs are at the end or you'll get an error
+  #     enum_attr :user_type, :another_user_type => UserType
   #   end
   #
   # When using non-model classes, it's the same syntax:
   #
   #   class User
-  #     enum_attr :user_type => UserType
+  #     enum_attr :user_type
   #   end
   #
   # This will tell your class/model that the user_type attribute contains values from the UserType enum, and
@@ -46,7 +52,22 @@ module Enum
   module AttrSupport
 
     # Call with enum_attr :field => Enum
-    def enum_attr(field_to_enum_map)
+    def enum_attr(*array_or_map)
+      # Convert to a full map
+      field_to_enum_map = {}
+      array_or_map.each do |info|
+        if info.is_a?(Symbol)
+          name = info.to_s.capitalize.gsub(/\_([a-z])/) { $1.capitalize }
+          klass = Object.const_get(name) rescue nil
+          raise "Unknown enum class '#{name}' for enum_attr :#{info}" unless klass
+          field_to_enum_map[info] = klass
+        elsif info.is_a?(Hash)
+          field_to_enum_map.merge!(info)
+        else
+          raise "Invalid enum_attr key: #{info.inspect}"
+        end
+      end
+      
       # Save off the attr map
       @enum_attrs ||= {}
       @enum_attrs.merge!(field_to_enum_map)

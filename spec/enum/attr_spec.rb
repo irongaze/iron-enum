@@ -8,6 +8,7 @@ describe Enum do
     
     class AttrClass
       enum_attr :pos => AttrTest
+      enum_attr :attr_test, :bob => AttrTest
     end
     
     before do
@@ -16,6 +17,8 @@ describe Enum do
     
     it 'should support declaring enum attributes' do
       Module.should respond_to(:enum_attr)
+      @obj.should respond_to(:attr_test_second?)
+      @obj.should respond_to(:bob_as_name)
     end
     
     it 'should allow getting an attribute in key form' do

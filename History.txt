@@ -1,3 +1,8 @@
+== 1.0.5 / 2016-08-16
+
+* Change enum_attr to assume :some_enum maps to SomeEnum module
+* Enable require 'iron-enum' instead of 'iron/enum'
+
 == 1.0.4 / 2013-06-21
 
 * Same as 1.0.4, but add support to model attributes as well (doh)
